@@ -553,7 +553,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1242364662}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.53363264, y: -0, z: 0, w: 0.8457164}
+  m_LocalRotation: {x: -0.6384952, y: -0, z: 0, w: 0.76962584}
   m_LocalPosition: {x: -150, y: 5, z: -93}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1338,7 +1338,7 @@ Transform:
   m_GameObject: {fileID: 919132148019329127}
   serializedVersion: 2
   m_LocalRotation: {x: -0.27059805, y: 0.6532815, z: 0.27059805, w: 0.6532815}
-  m_LocalPosition: {x: -150, y: 200, z: 0}
+  m_LocalPosition: {x: -150, y: 500, z: 0}
   m_LocalScale: {x: 100.00004, y: 100.00003, z: 100.000046}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -1886,9 +1886,9 @@ GameObject:
   - component: {fileID: 543450652561711837}
   - component: {fileID: 3469287838626491768}
   - component: {fileID: 1711813854632794546}
+  - component: {fileID: 1146635581}
   - component: {fileID: 1146635577}
   - component: {fileID: 1146635580}
-  - component: {fileID: 1146635581}
   - component: {fileID: 3469287838626491769}
   - component: {fileID: 3469287838626491770}
   m_Layer: 0
@@ -5006,7 +5006,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b5ec2f28232fa541a4dbbf65c41f262, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dragCoefficient: 0.24
+  dragCoefficient: 1
+  referenceArea: 15.904313
   lowerAtmosphereHeight: 7000
   m: 440
 --- !u!1 &3475551541156020608

@@ -5,6 +5,7 @@ using UnityEngine;
 public class dragwithorientation2 : MonoBehaviour
 {
     public float dragCoefficient = 0.24f; // Drag coefficient for a sphere
+    public float referenceArea = 15.90431281f; // m^2 (Reference area for drag calculation)
     public float lowerAtmosphereHeight = 7000.0f; // Height at which the lower atmosphere ends and the upper atmosphere begins (m)
     public float m = 440;
     private Rigidbody rb;
