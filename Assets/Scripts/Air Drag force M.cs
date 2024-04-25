@@ -2,10 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class dragwithorientation : MonoBehaviour
+public class dragwithorientation2 : MonoBehaviour
 {
     public float dragCoefficient = 0.24f; // Drag coefficient for a sphere
-    public float referenceArea = 15.90431281f; // m^2 (Reference area for drag calculation)
     public float lowerAtmosphereHeight = 7000.0f; // Height at which the lower atmosphere ends and the upper atmosphere begins (m)
     public float m = 440;
     private Rigidbody rb;
@@ -43,7 +42,7 @@ public class dragwithorientation : MonoBehaviour
         float airDensity = pressure / (0.1921f * (temperature + 273.1f));
 
         // Calculate projected area based on object orientation
-        float projectedArea = CalculateProjectedArea(velocity);
+        float projectedArea = CalculateEffectiveArea(collider, velocity);
 
         // Calculate the drag force
         float dragForceMagnitude = 0.5f * dragCoefficient * airDensity * speed * speed * projectedArea;
@@ -58,41 +57,32 @@ public class dragwithorientation : MonoBehaviour
         rb.AddForce(dragForce + rotationForce);
     }
 
-    float CalculateProjectedArea(Vector3 velocity)
+    float CalculateEffectiveArea(Collider collider, Vector3 velocity)
     {
-        // This uses a bounding box for simplicity, replace with your specific logic
+        Mesh mesh = collider.GetComponent<MeshFilter>().mesh;
+        Vector3[] vertices = mesh.vertices;
+        int[] triangles = mesh.triangles;
+        float area = 0.0f;
 
-        // Get world space points of the collider bounds
-        Bounds bounds = collider.bounds;
-        Vector3[] points = new Vector3[8];
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < triangles.Length; i += 3)
         {
-            points[i] = bounds.min;
-            if ((i & 1) == 1) points[i].x = bounds.max.x;
-            if ((i & 2) == 2) points[i].y = bounds.max.y;
-            if ((i & 4) == 4) points[i].z = bounds.max.z;
+            Vector3 p1 = vertices[triangles[i]];
+            Vector3 p2 = vertices[triangles[i + 1]];
+            Vector3 p3 = vertices[triangles[i + 2]];
+
+            // Calculate the normal of the triangle
+            Vector3 normal = Vector3.Cross(p2 - p1, p3 - p1).normalized;
+
+            // Project the normal onto the velocity vector
+            float projection = Mathf.Abs(Vector3.Dot(normal, velocity.normalized));
+
+            // Calculate the area of the triangle
+            float triangleArea = Vector3.Cross(p2 - p1, p3 - p1).magnitude * 0.5f;
+
+            // Add the projected area of the triangle to the total area
+            area += triangleArea * projection;
         }
 
-        // Project points onto a plane perpendicular to velocity
-        Vector3 normal = velocity.normalized;
-        Plane projectionPlane = new Plane(normal, points[0]); // Use any corner point
-
-        float projectedArea = 0.0f;
-        for (int i = 0; i < points.Length; i++)
-        {
-            // Distance from point to plane
-            float distance = projectionPlane.GetDistanceToPoint(points[i]);
-
-            // Project point onto plane
-            Vector3 projectedPoint = points[i] - distance * normal;
-
-            // Update projected area (assuming convex shape)
-            projectedArea += Vector3.Cross(projectedPoint - points[i], points[(i + 1) % points.Length]).magnitude;
-        }
-
-        // Adjust projected area based on reference area
-        projectedArea /= referenceArea;
-
-        return Mathf.Clamp(projectedArea, 0.0f, 1.0f); // Ensure positive value
-    }
+        return area;
+    }
 }

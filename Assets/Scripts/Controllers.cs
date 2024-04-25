@@ -18,7 +18,6 @@ public class Controllers : MonoBehaviour
 
         // Move the object forward, backward, left, or right in world space.
         transform.Translate(transform.forward * speed * Time.deltaTime * verticalInput, Space.World);
-        //transform.Translate(transform.right * speed * Time.deltaTime * horizontalInput, Space.World);
     }
 }
 
