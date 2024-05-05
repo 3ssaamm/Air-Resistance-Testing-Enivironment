@@ -7624,7 +7624,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1242364662}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.012373217, y: 0.4862946, z: -0.006886992, w: 0.8736802}
+  m_LocalRotation: {x: -0.38759255, y: -0, z: 0, w: 0.92183083}
   m_LocalPosition: {x: -150, y: 5, z: -93}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -11938,7 +11938,7 @@ Transform:
   m_GameObject: {fileID: 2050993627}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: -150, y: 100, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -13357,6 +13357,9 @@ GameObject:
   - component: {fileID: 872537866224480874}
   - component: {fileID: 872537866224480875}
   - component: {fileID: 872537866224480876}
+  - component: {fileID: 872537866224480877}
+  - component: {fileID: 872537866224480878}
+  - component: {fileID: 872537866224480879}
   m_Layer: 0
   m_Name: Mars Lander Updated1
   m_TagString: Untagged
@@ -13835,8 +13838,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 526974197567809766}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.27059805, y: 0.6532815, z: -0.27059805, w: 0.6532815}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.18301274, y: 0.6830127, z: -0.18301274, w: 0.6830127}
+  m_LocalPosition: {x: -150, y: 100, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -13862,7 +13865,7 @@ Transform:
   - {fileID: 6585995436057342625}
   - {fileID: 6421435817614815738}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 45, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 30, y: 90, z: 0}
 --- !u!114 &872537866224480865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13939,8 +13942,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 872537866224480868}
-  initialPosition: {x: -150, y: 100, z: 0}
-  initialVelocity: {x: 0, y: -200, z: 0}
+  initialPosition: {x: -150, y: 5000, z: 0}
+  initialVelocity: {x: 50, y: -200, z: 0}
   currentVelocity: {x: 0, y: 0, z: 0}
 --- !u!114 &872537866224480875
 MonoBehaviour:
@@ -13949,7 +13952,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 526974197567809766}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 10251e9d633ea254eaf4cf406d3d1222, type: 3}
   m_Name: 
@@ -13979,6 +13982,111 @@ MonoBehaviour:
   debug: 1
   overrideAirDensity: 0.02
   overrideDensityVariation: 0.5
+--- !u!114 &872537866224480877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 526974197567809766}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab3537bec75627841b1baec8b814ae0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dragCoefficients:
+  - 0.80859405
+  - 0.4158495
+  - 0.4071914
+  - 0.01619733
+  - 0.002796626
+  - -0.10439445
+  - -0.12627868
+  - -0.42471305
+  - 0.06799861
+  liftCoefficients:
+  - 0.7378569
+  - 0.6182937
+  - 0.4071914
+  - 0.002516561
+  - 0.027966257
+  - 0.02270282
+  - -0.36785272
+  - -0.6034656
+  - -0.6172964
+  aoa:
+  - 45
+  - 30
+  - 15
+  - -5
+  - -5
+  - -5
+  - -15
+  - -30
+  - -45
+  airDensity: 0
+  angleOfAttack: 0
+  dragCoefficient: 0
+  liftCoefficient: 0
+  dragForce: 0
+  liftForce: 0
+--- !u!33 &872537866224480878
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 526974197567809766}
+  m_Mesh: {fileID: 1354445856614592872, guid: a7cb51c6a4d11b84f938003dc9f8848e, type: 3}
+--- !u!114 &872537866224480879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 526974197567809766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dea369859aa11244981bbf3a6bcaa383, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dragCoefficients:
+  - 0.80859405
+  - 0.4158495
+  - 0.4071914
+  - 0.01619733
+  - 0.002796626
+  - -0.10439445
+  - -0.12627868
+  - -0.42471305
+  - 0.06799861
+  liftCoefficients:
+  - 0.7378569
+  - 0.6182937
+  - 0.4071914
+  - 0.002516561
+  - 0.027966257
+  - 0.02270282
+  - -0.36785272
+  - -0.6034656
+  - -0.6172964
+  aoa:
+  - 45
+  - 30
+  - 15
+  - -5
+  - -5
+  - -5
+  - -15
+  - -30
+  - -45
+  airDensity: 0
+  angleOfAttack: 0
+  dragCoefficient: 0
+  dragForce: 0
+  referenceArea: 0
+  minRotationSpeed: 0.1
+  maxRotationSpeed: 5
 --- !u!4 &890810503724174149
 Transform:
   m_ObjectHideFlags: 0
