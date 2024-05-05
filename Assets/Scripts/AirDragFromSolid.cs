@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MarsLanderSimulation : MonoBehaviour
+public class MarsLanderAirResistenceSimulation : MonoBehaviour
 {
     [Header("Aerodynamic Data")]
     [SerializeField] private float[] dragCoefficients = { 0.80859406f, 0.415849512f, 0.407191385f, 0.01619733f, 0.002796626f, -0.10439445f, -0.12627868f, -0.424713034f, 0.06799861f };
@@ -15,6 +15,7 @@ public class MarsLanderSimulation : MonoBehaviour
     [SerializeField] private float referenceArea;
     [SerializeField] private float minRotationSpeed = 0.1f; // Minimum rotation speed
     [SerializeField] private float maxRotationSpeed = 5f;   // Maximum rotation speed
+    [SerializeField] private bool debug = false; // Are we in debug mode?
 
     
     private Rigidbody landerRigidbody;
@@ -29,7 +30,7 @@ public class MarsLanderSimulation : MonoBehaviour
     void FixedUpdate()
     {
         ApplyForces();
-        referenceArea = CalculateReferenceArea();
+        referenceArea = CalculateReferenceAreaWithRaycasting();
     }
 
     void ApplyForces()
@@ -105,84 +106,106 @@ public class MarsLanderSimulation : MonoBehaviour
 
     float CalculateMarsAtmosphericDensity(float altitude)
     {
-        // Mars atmospheric density calculation
+        // Calculation of atmospheric density on Mars
         // Constants for Mars' atmosphere
-        const float T0 = -31f; // Base temperature at 0m altitude
-        const float lapseRate = -0.000998f; // Temperature lapse rate
+        const float T0Lower = -31f; // Base temperature at 0m altitude
+        const float T0Upper = -23.4f; // Base temperature at 7000m altitude
+        const float lapseRateLower = -0.000998f; // Temperature lapse rate below 7000m
+        const float lapseRateUpper = -0.00222f; // Temperature lapse rate above 7000m
         const float P0 = 0.699f; // Base pressure
         const float pressureRate = -0.00009f; // Pressure rate
         const float R = 0.1921f; // Specific gas constant for Mars' atmosphere
 
-        float temperature = T0 + lapseRate * altitude;
-        float pressure = P0 * Mathf.Exp(pressureRate * altitude);
-        float density = pressure / (R * (temperature + 273.15f));
-        return density;
-    }
-
-    float CalculateReferenceArea()
-    {
-        MeshFilter meshFilter = GetComponent<MeshFilter>();
-        if (meshFilter != null)
+        float temperature, pressure;
+        if (altitude <= 7000)
         {
-            Mesh mesh = meshFilter.mesh;
-            return CalculateProjectedArea(mesh);
+            temperature = T0Lower + lapseRateLower * altitude;
+            pressure = P0 * Mathf.Exp(pressureRate * altitude);
         }
         else
         {
-            Debug.LogError("MeshFilter component not found! Reference area cannot be calculated.");
-            return 0f;
+            temperature = T0Upper + lapseRateUpper * altitude;
+            pressure = P0 * Mathf.Exp(pressureRate * altitude);
         }
+
+        float density = pressure / (R * (temperature + 273.15f));
+        return density;
+
     }
 
 
-    float CalculateProjectedArea(Mesh mesh)
-    {
-        if (mesh == null)
-        {
-            Debug.LogError("Mesh is null. Cannot calculate projected area.");
-            return 0f;
-        }
 
-        float totalArea = 0f;
+    // Function to calculate the reference area using raycasting
+    float CalculateReferenceAreaWithRaycasting()
+    {
+        float width = 6f; // Width of the cube
+        float height = 6f; // Height of the cube
+        float depth = 6f; // Depth of the cube
+        float rayDensity = 50f; // Number of rays per unit
+        float totalArea = 0f; // Initialize total area
+        Vector3 offset = new Vector3(0f, -3.5f, 0f); // Offset for the cube
         Vector3 landerVelocityNormalized = landerRigidbody.velocity.normalized;
 
+        // Ensure the velocity vector is not zero
         if (landerVelocityNormalized == Vector3.zero)
         {
             Debug.LogError("Velocity is zero. Cannot calculate projected area.");
             return 0f;
         }
 
-        if (mesh.triangles.Length == 0)
+        // Cast rays within the defined cube volume
+        Vector3 rayDirection = -landerVelocityNormalized;
+        Vector3 cubeCenter = transform.position + offset; // Apply the offset here
+        Vector3 cubeSize = new Vector3(width, height, depth);
+
+        // Calculate spacing based on ray density
+        float widthSpacing = width / rayDensity;
+        float heightSpacing = height / rayDensity;
+        float depthSpacing = depth / rayDensity;
+
+        // Iterate over the volume of the cube
+        for (float d = -depth / 2; d < depth / 2; d += depthSpacing)
         {
-            Debug.LogError("Mesh triangles array is empty. Cannot calculate projected area.");
-            return 0f;
-        }
-
-        for (int i = 0; i < mesh.triangles.Length; i += 3)
-        {
-            Vector3 v1 = mesh.vertices[mesh.triangles[i]];
-            Vector3 v2 = mesh.vertices[mesh.triangles[i + 1]];
-            Vector3 v3 = mesh.vertices[mesh.triangles[i + 2]];
-
-            Vector3 normal = Vector3.Cross(v2 - v1, v3 - v1).normalized;
-            float triangleArea = Vector3.Cross(v1 - v2, v1 - v3).magnitude * 0.5f;
-            float projectedArea = Mathf.Abs(Vector3.Dot(normal, landerVelocityNormalized)) * triangleArea;
-
-            if (triangleArea == 0f)
+            for (float w = -width / 2; w < width / 2; w += widthSpacing)
             {
-                Debug.LogWarning("Triangle area is zero. Check mesh data.");
+                for (float h = -height / 2; h < height / 2; h += heightSpacing)
+                {
+                    Vector3 castPosition = cubeCenter + new Vector3(w, h, d);
+                    Ray ray = new Ray(castPosition, rayDirection);
+                    RaycastHit hit;
+
+                    // Cast the ray and calculate the area contribution if it hits
+                    if (Physics.Raycast(ray, out hit, depthSpacing))
+                    {
+                        float areaContribution = (widthSpacing * heightSpacing) *1.22f;
+                        totalArea += areaContribution;
+
+                        // Conditional debug visualization
+                        if (debug)
+                        {
+                            if(hit.transform == transform)
+                            {
+                                Debug.DrawLine(castPosition, hit.point, Color.blue);
+                            }
+                            else
+                            {
+                                Debug.DrawLine(castPosition, castPosition + rayDirection * depthSpacing, Color.red);
+                            }
+                        }
+                    }
+                    else if (debug)
+                    {
+                        // Draw the ray for the size of the cube if no hit occurs
+                        Debug.DrawRay(castPosition, rayDirection * depthSpacing, Color.white);
+                    }
+                }
             }
-
-            totalArea += projectedArea;
         }
 
-        if (totalArea == 0f)
-        {
-            Debug.LogError("Total projected area is zero. Check mesh data and scale.");
-        }
-
+        // The total area is the sum of the contributions from the ray hits
         return totalArea;
     }
+
 
 
 }
