@@ -11,11 +11,17 @@ public class MarsLanderAirResistenceSimulation : MonoBehaviour
     [SerializeField] private float airDensity;
     [SerializeField] private float angleOfAttack;
     [SerializeField] private float dragCoefficient;
+    [SerializeField] private float liftCoefficient;
     [SerializeField] private float dragForce;
-    [SerializeField] private float referenceArea;
+    [SerializeField] private float liftForce;
     [SerializeField] private float minRotationSpeed = 0.1f; // Minimum rotation speed
     [SerializeField] private float maxRotationSpeed = 5f;   // Maximum rotation speed
+
+    [Header("Ray Casting")]
+    [SerializeField] private float referenceArea;
+    [SerializeField] private float rayDensity = 20f; //Number of rays per unit
     [SerializeField] private bool debug = false; // Are we in debug mode?
+
 
     
     private Rigidbody landerRigidbody;
@@ -41,16 +47,23 @@ public class MarsLanderAirResistenceSimulation : MonoBehaviour
         // Calculate dynamic air density based on altitude
         airDensity = CalculateMarsAtmosphericDensity(landerRigidbody.position.y);
         
-        // Calculate angle of attack and drag coefficient
+        // Calculate angle of attack and aerodynamic coefficients
         angleOfAttack = CalculateAngleOfAttack(velocityVector);
         dragCoefficient = InterpolateCoefficients(aoa, dragCoefficients, angleOfAttack);
+        liftCoefficient = InterpolateCoefficients(aoa, liftCoefficients, angleOfAttack);
         
         // Calculate dynamic drag force
         dragForce = 0.5f * airDensity * velocityMagnitude * velocityMagnitude * dragCoefficient * referenceArea;
+        // Calculate dynamic lift force
+        liftForce = 0.5f * airDensity * velocityMagnitude * velocityMagnitude * liftCoefficient * referenceArea;
 
         // Apply dynamic drag force
         Vector3 dragDirection = -velocityVector.normalized;
         landerRigidbody.AddForce(dragDirection * dragForce, ForceMode.Force);
+
+        // Apply dynamic lift force
+        Vector3 liftDirection = Vector3.Cross(velocityVector, transform.right).normalized;
+        landerRigidbody.AddForce(liftDirection * liftForce, ForceMode.Force);
 
         // Calculate dynamic rotation speed based on environmental factors and Rigidbody's angular drag
         float dynamicRotationSpeed = CalculateDynamicRotationSpeed(airDensity, velocityMagnitude, dragCoefficient, landerRigidbody.angularDrag);
@@ -138,10 +151,9 @@ public class MarsLanderAirResistenceSimulation : MonoBehaviour
     // Function to calculate the reference area using raycasting
     float CalculateReferenceAreaWithRaycasting()
     {
-        float width = 6f; // Width of the cube
+        float width  = 6f; // Width of the cube
         float height = 6f; // Height of the cube
-        float depth = 6f; // Depth of the cube
-        float rayDensity = 50f; // Number of rays per unit
+        float depth  = 6f; // Depth of the cube
         float totalArea = 0f; // Initialize total area
         Vector3 offset = new Vector3(0f, -3.5f, 0f); // Offset for the cube
         Vector3 landerVelocityNormalized = landerRigidbody.velocity.normalized;
@@ -177,6 +189,7 @@ public class MarsLanderAirResistenceSimulation : MonoBehaviour
                     // Cast the ray and calculate the area contribution if it hits
                     if (Physics.Raycast(ray, out hit, depthSpacing))
                     {
+                        // Assuming the factor of 1.22f is a correction factor for the area
                         float areaContribution = (widthSpacing * heightSpacing) *1.22f;
                         totalArea += areaContribution;
 
