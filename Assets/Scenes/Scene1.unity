@@ -13943,7 +13943,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 872537866224480868}
   initialPosition: {x: -150, y: 8000, z: 0}
-  initialVelocity: {x: 0, y: -200, z: 0}
+  initialVelocity: {x: 0, y: -300, z: 0}
   currentVelocity: {x: 0, y: 0, z: 0}
 --- !u!114 &872537866224480875
 MonoBehaviour:

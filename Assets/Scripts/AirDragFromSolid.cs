@@ -35,8 +35,13 @@ public class MarsLanderAirResistenceSimulation : MonoBehaviour
 
     void FixedUpdate()
     {
+        // Calculate the projected position of the object based on its current velocity and the time step
+        Vector3 projectedPosition = transform.position + landerRigidbody.velocity * Time.fixedDeltaTime;
+
+        referenceArea = CalculateReferenceAreaWithRaycasting(projectedPosition);
+
+        // Apply forces based on the newly calculated reference area
         ApplyForces();
-        referenceArea = CalculateReferenceAreaWithRaycasting();
     }
 
     void ApplyForces()
@@ -149,14 +154,17 @@ public class MarsLanderAirResistenceSimulation : MonoBehaviour
 
 
     // Function to calculate the reference area using raycasting
-    float CalculateReferenceAreaWithRaycasting()
+    float CalculateReferenceAreaWithRaycasting(Vector3 projectedPosition)
     {
         float width  = 6f; // Width of the cube
         float height = 6f; // Height of the cube
         float depth  = 6f; // Depth of the cube
         float totalArea = 0f; // Initialize total area
-        Vector3 offset = new Vector3(0f, -3.5f, 0f); // Offset for the cube
+        Vector3 offset = new Vector3(0f, 0f, 0f); // Offset for the cube
         Vector3 landerVelocityNormalized = landerRigidbody.velocity.normalized;
+
+        // Use the projected position for the starting point of raycasting
+        Vector3 rayStartPoint = projectedPosition + offset; // 'offset' is a fixed offset from the object's center
 
         // Ensure the velocity vector is not zero
         if (landerVelocityNormalized == Vector3.zero)
@@ -182,7 +190,8 @@ public class MarsLanderAirResistenceSimulation : MonoBehaviour
             {
                 for (float h = -height / 2; h < height / 2; h += heightSpacing)
                 {
-                    Vector3 castPosition = cubeCenter + new Vector3(w, h, d);
+                    // Cast position is now based on a fixed point relative to the object
+                    Vector3 castPosition = rayStartPoint + new Vector3(w, h, d);
                     Ray ray = new Ray(castPosition, rayDirection);
                     RaycastHit hit;
 
