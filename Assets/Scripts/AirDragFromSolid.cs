@@ -189,8 +189,8 @@ public class MarsLanderAirResistenceSimulation : MonoBehaviour
                     // Cast the ray and calculate the area contribution if it hits
                     if (Physics.Raycast(ray, out hit, depthSpacing))
                     {
-                        // Assuming the factor of 1.22f is a correction factor for the area
-                        float areaContribution = (widthSpacing * heightSpacing) *1.22f;
+                        
+                        float areaContribution = (widthSpacing * heightSpacing);
                         totalArea += areaContribution;
 
                         // Conditional debug visualization
