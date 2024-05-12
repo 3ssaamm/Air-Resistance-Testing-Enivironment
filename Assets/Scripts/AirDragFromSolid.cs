@@ -156,9 +156,9 @@ public class MarsLanderAirResistenceSimulation : MonoBehaviour
     // Function to calculate the reference area using raycasting
     float CalculateReferenceAreaWithRaycasting(Vector3 projectedPosition)
     {
-        float width  = 6f; // Width of the cube
-        float height = 6f; // Height of the cube
-        float depth  = 6f; // Depth of the cube
+        float width = 6f; // Width of the cube
+        float height = 8f; // Height of the cube
+        float depth = 6f; // Depth of the cube
         float totalArea = 0f; // Initialize total area
         Vector3 offset = new Vector3(0f, 0f, 0f); // Offset for the cube
         Vector3 landerVelocityNormalized = landerRigidbody.velocity.normalized;
@@ -198,14 +198,13 @@ public class MarsLanderAirResistenceSimulation : MonoBehaviour
                     // Cast the ray and calculate the area contribution if it hits
                     if (Physics.Raycast(ray, out hit, depthSpacing))
                     {
-                        
                         float areaContribution = (widthSpacing * heightSpacing);
                         totalArea += areaContribution;
 
                         // Conditional debug visualization
                         if (debug)
                         {
-                            if(hit.transform == transform)
+                            if (hit.transform == transform)
                             {
                                 Debug.DrawLine(castPosition, hit.point, Color.blue);
                             }
