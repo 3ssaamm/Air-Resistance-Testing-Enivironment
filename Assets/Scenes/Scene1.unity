@@ -7598,7 +7598,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1e+14
-  field of view: 4
+  field of view: 0.05
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -7624,7 +7624,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1242364662}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.38759255, y: -0, z: 0, w: 0.92183083}
+  m_LocalRotation: {x: -0.34771708, y: 0.445028, z: 0.19285043, w: 0.80240375}
   m_LocalPosition: {x: -150, y: 5, z: -93}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -11938,7 +11938,7 @@ Transform:
   m_GameObject: {fileID: 2050993627}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -150, y: 100, z: -10}
+  m_LocalPosition: {x: 800, y: 1200, z: 499}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -13360,6 +13360,7 @@ GameObject:
   - component: {fileID: 872537866224480877}
   - component: {fileID: 872537866224480878}
   - component: {fileID: 872537866224480879}
+  - component: {fileID: 872537866224480880}
   m_Layer: 0
   m_Name: Mars Lander Updated1
   m_TagString: Untagged
@@ -13839,8 +13840,8 @@ Transform:
   m_GameObject: {fileID: 526974197567809766}
   serializedVersion: 2
   m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: -150, y: 100, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 800, y: 1200, z: 500}
+  m_LocalScale: {x: 0.08, y: 0.08, z: 0.08}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1935723541885044476}
@@ -13888,9 +13889,9 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 526974197567809766}
   serializedVersion: 4
-  m_Mass: 3152.5
+  m_Mass: 3.1525
   m_Drag: 0
-  m_AngularDrag: 0
+  m_AngularDrag: 0.5
   m_CenterOfMass: {x: 0, y: -0.0215, z: -0.3}
   m_InertiaTensor: {x: 10, y: 10, z: 10}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -13942,8 +13943,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 872537866224480868}
-  initialPosition: {x: -150, y: 8000, z: 0}
-  initialVelocity: {x: 0, y: -300, z: 0}
+  initialPosition: {x: 800, y: 1200, z: 500}
+  initialVelocity: {x: -2.8087852, y: -3.678469, z: 0.4087589}
   currentVelocity: {x: 0, y: 0, z: 0}
 --- !u!114 &872537866224480875
 MonoBehaviour:
@@ -14045,7 +14046,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 526974197567809766}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dea369859aa11244981bbf3a6bcaa383, type: 3}
   m_Name: 
@@ -14088,6 +14089,60 @@ MonoBehaviour:
   liftForce: 0
   minRotationSpeed: 0.1
   maxRotationSpeed: 5
+  referenceArea: 0
+  rayDensity: 20
+  debug: 1
+--- !u!114 &872537866224480880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 526974197567809766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bbe4ea333c7d1b42bdaf2cac52aebed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dragCoefficients:
+  - 0.80859405
+  - 0.4158495
+  - 0.4071914
+  - 0.01619733
+  - 0.002796626
+  - -0.10439445
+  - -0.12627868
+  - -0.42471305
+  - 0.06799861
+  liftCoefficients:
+  - 0.7378569
+  - 0.6182937
+  - 0.4071914
+  - 0.002516561
+  - 0.027966257
+  - 0.02270282
+  - -0.36785272
+  - -0.6034656
+  - -0.6172964
+  aoa:
+  - 45
+  - 30
+  - 15
+  - -5
+  - -5
+  - -5
+  - -15
+  - -30
+  - -45
+  airDensity: 0
+  angleOfAttack: 0
+  dragCoefficient: 0
+  liftCoefficient: 0
+  dragForce: 0
+  liftForce: 0
+  minRotationSpeed: 0.1
+  maxRotationSpeed: 5
+  scale: 0.001
   referenceArea: 0
   rayDensity: 20
   debug: 1
